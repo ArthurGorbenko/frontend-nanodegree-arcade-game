@@ -1,40 +1,119 @@
-// Enemies our player must avoid
-var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
-};
+let countForWonRound = 0;
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-};
+const blockWidth = 100;
+const blockHeight = 90;
+const fieldMaxHeight = 400;
+const fieldMinHeight = -70;
+const fieldMaxWidth = 405;
+const fieldMinWidth = 0;
+const waterLevel = fieldMinHeight + blockHeight;
+const startPositionX = 200;
+const startPositionY = 300;
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+class Enemy {
+    constructor(x, y) {
+        this.sprite = 'images/enemy-bug.png';
+        this.x = x;
+        this.y = y;
+        this.speed = Math.floor((Math.random() * 200)) + 100;
+    }
+    update(dt) {
+        this.x += this.speed * dt;
+        
+        if (this.x > 600) {
+            this.x = -100;
+        }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+        const halfOfSizeImg = 50;
 
+        if (this.x < player.x + halfOfSizeImg &&
+            this.x + halfOfSizeImg > player.x &&
+            this.y < player.y + halfOfSizeImg &&
+            this.y + halfOfSizeImg > player.y) {
+            alert('You are busted!')
+            countForWonRound = 0;
+            player.x = startPositionX;
+            player.y = startPositionY;
+            allEnemies.forEach(el => el.generateSpeed());
+        }
+    }
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+    generateSpeed(){
+        this.speed = Math.floor((Math.random() * 200)) + 100;
+    }
+}
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+class Player {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.sprite = "images/char-boy.png";
 
+    }
+    update(keyPressed) {
+        switch (keyPressed) {
+            case "left":
+                if (this.x - blockWidth <= fieldMinWidth) {
+                    return null;
+                } else {
+                    this.x -= blockWidth;
+                    break;
+                }
+            case "up":
+                if (this.y - blockHeight <= fieldMinHeight) {
+                    return null;
+                } else if (this.y - blockHeight < waterLevel) {
+                    countForWonRound++;
+                    if (countForWonRound === 1) {
+                        alert("Congratulations! You won " + countForWonRound + " round!");
+                    } else {
+                        alert("Congratulations! You won " + countForWonRound + " rounds!");
+                    }
+                    player.x = 200;
+                    player.y = 300;
+                    allEnemies.forEach(el => el.speed *= countForWonRound);// difficulty increase
 
+                }
+                else {
+                    this.y -= blockHeight;
+                    break;
+                }
+            case "right":
+                if (this.x + blockWidth >= fieldMaxWidth) {
+                    return null;
+                } else {
+                    this.x += blockWidth;
+                    break;
+                }
+            case "down":
+                if (this.y + blockHeight >= fieldMaxHeight) {
+                    return null;
+                } else {
+                    this.y += blockHeight;
+                };
+        }
+    }
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+    handleInput(keyPressed) {
+        this.update(keyPressed);
+    }
+
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+}
+
+let player = new Player(200, 400);
+let enemyOne = new Enemy(-50, 50);
+let enemyTwo = new Enemy(-50, 130);
+let enemyThree = new Enemy(-50, 210);
+
+const allEnemies = [enemyOne, enemyTwo, enemyThree];
+
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
@@ -44,3 +123,7 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+
+
+
