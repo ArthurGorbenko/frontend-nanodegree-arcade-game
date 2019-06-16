@@ -77,9 +77,10 @@ class Player {
           } else {
             alert("Congratulations! You won " + countForWonRound + " rounds!");
           }
-          player.x = 200;
-          player.y = 300;
+          player.x = startPositionX;
+          player.y = startPositionY;
           allEnemies.forEach(el => el.generateSpeed(countForWonRound)); // difficulty increase
+          break;
         } else {
           this.y -= blockHeight;
           break;
@@ -109,7 +110,7 @@ class Player {
   }
 }
 
-let player = new Player(200, 400);
+let player = new Player(startPositionX, startPositionY);
 let enemyOne = new Enemy(-50, 50);
 let enemyTwo = new Enemy(-50, 130);
 let enemyThree = new Enemy(-50, 210);
@@ -126,3 +127,4 @@ document.addEventListener("keyup", function(e) {
 
   player.handleInput(allowedKeys[e.keyCode]);
 });
+ 
