@@ -71,11 +71,7 @@ class Player {
           return null;
         } else if (this.y - blockHeight < waterLevel) {
           countForWonRound++;
-          if (countForWonRound === 1) {
-            alert("Congratulations! You won " + countForWonRound + " round!");
-          } else {
-            alert("Congratulations! You won " + countForWonRound + " rounds!");
-          }
+          alert("Congratulations, you won round! Score : " + countForWonRound);
           player.x = startPositionX;
           player.y = startPositionY;
           allEnemies.forEach(el => el.generateSpeed(countForWonRound)); // difficulty increase
