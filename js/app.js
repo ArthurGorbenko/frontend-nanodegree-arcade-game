@@ -9,6 +9,7 @@ const fieldMinWidth = -10;
 const waterLevel = fieldMinHeight + blockHeight;
 const startPositionX = 200;
 const startPositionY = 300;
+const halfOfSizeImg = 50;
 
 class Enemy {
   constructor(x, y) {
@@ -24,8 +25,6 @@ class Enemy {
       this.x = -100;
       this.generateSpeed(countForWonRound);
     }
-
-    const halfOfSizeImg = 50;
 
     if (
       this.x < player.x + halfOfSizeImg &&
@@ -118,7 +117,7 @@ let enemyThree = new Enemy(-50, 210);
 const allEnemies = [enemyOne, enemyTwo, enemyThree];
 
 document.addEventListener("keyup", function(e) {
-  var allowedKeys = {
+  let allowedKeys = {
     37: "left",
     38: "up",
     39: "right",
