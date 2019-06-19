@@ -10,6 +10,8 @@ const waterLevel = fieldMinHeight + blockHeight;
 const startPositionX = 200;
 const startPositionY = 300;
 const halfOfSizeImg = 50;
+const endOfField = 600;
+const starOverField = -100;
 
 class Enemy {
   constructor(x, y) {
@@ -21,9 +23,8 @@ class Enemy {
   update(dt) {
     this.x += this.speed * dt;
 
-    if (this.x > 600) {
-      this.x = -100;
-      this.generateSpeed(countForWonRound);
+    if (this.x > endOfField) {
+      this.restartEnemy();
     }
 
     if (
@@ -32,13 +33,21 @@ class Enemy {
       this.y < player.y + halfOfSizeImg &&
       this.y + halfOfSizeImg > player.y
     ) {
-      alert("You are busted!");
-      countForWonRound = 0;
-      player.x = startPositionX;
-      player.y = startPositionY;
-      allEnemies.forEach(el => el.generateSpeed(countForWonRound));
+      this.collisionHapped();
     }
   }
+  restartEnemy() {
+    this.x = starOverField;
+    this.generateSpeed(countForWonRound);
+  }
+  collisionHapped() {
+    alert("You are busted!");
+    countForWonRound = 0;
+    player.x = startPositionX;
+    player.y = startPositionY;
+    allEnemies.forEach(el => el.generateSpeed(countForWonRound));
+  }
+
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
